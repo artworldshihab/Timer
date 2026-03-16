@@ -1,659 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Ramadan Countdown | ! sʜᴏᴡʀᴀᴠ ⚠︎</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- GSAP for Animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-
-    <style>
-        /* Base & Resets */
-        body { margin: 0; font-family: 'Poppins', sans-serif; overflow: hidden; color: white; background-color: #050505; }
-        
-        /* Dynamic Theme Backgrounds */
-        #bg-container { position: absolute; inset: 0; z-index: -2; transition: all 1.5s ease-in-out; background-size: cover; background-position: center; }
-        .theme-flowers { background: linear-gradient(to bottom, #ff9a9e, #fecfef); }
-        .theme-night { background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364); }
-        .theme-stars { background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%); }
-        .theme-forest { background: linear-gradient(to right, #134e5e, #71b280); }
-        .theme-sunrise { background: linear-gradient(to top, #ff7e5f, #feb47b); }
-        .theme-desert { background: linear-gradient(to bottom, #c69b7b, #825a3d); }
-        .theme-city { background: linear-gradient(to bottom, #2b1055, #7597de); }
-        .theme-rain { background: linear-gradient(to bottom, #3a404d, #181b21); }
-        .theme-ocean { background: linear-gradient(to bottom, #2193b0, #6dd5ed); }
-        .theme-neon { background: linear-gradient(to bottom, #000000, #434343); box-shadow: inset 0 0 100px #ff00ff; }
-
-        /* Liquid Box Animation */
-        .liquid-box {
-            position: relative;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-            animation: morph 8s ease-in-out infinite;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.3s ease;
-        }
-        @keyframes morph {
-            0%, 100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; box-shadow: 0 0 40px rgba(0,255,200,0.2); }
-            34% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; box-shadow: 0 0 60px rgba(0,255,200,0.4); }
-            67% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; box-shadow: 0 0 40px rgba(0,255,200,0.2); }
-        }
-
-        /* Glassmorphism Panels */
-        .glass-panel {
-            background: rgba(10, 10, 10, 0.4);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-        }
-
-        /* Typography & Effects */
-        .font-digital { font-family: 'Orbitron', sans-serif; }
-        .glow-text { text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5); }
-        
-        /* Particle Canvas */
-        #particle-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
-    </style>
+    <title>Ramadan Pro Timer | ! sʜᴏᴡʀᴀᴠ ⚠︎</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="antialiased h-screen w-screen flex flex-col items-center justify-between p-4 md:p-8">
+<body class="theme-default">
 
-    <!-- Backgrounds & Effects -->
-    <div id="bg-container" class="theme-night"></div>
-    <canvas id="particle-canvas"></canvas>
-
-    <!-- Header Holder -->
-    <header class="w-full flex justify-between items-center glass-panel p-4 z-10 transition-all duration-500">
-        <div class="flex items-center gap-3">
-            <h1 id="main-title" class="text-2xl md:text-4xl font-bold glow-text outline-none cursor-text transition-all" contenteditable="true" spellcheck="false" data-tippy-content="Click to edit Title">
-                ! sʜᴏᴡʀᴀᴠ ⚠︎
-            </h1>
-            <button onclick="openSettings()" class="hover:text-green-400 transition-colors haptic-btn"><i class="fas fa-palette"></i></button>
-        </div>
-        
-        <!-- Local Time Display -->
-        <div class="text-right">
-            <p class="text-sm text-gray-300 uppercase tracking-widest">Local Time</p>
-            <div class="flex items-baseline gap-2">
-                <span id="local-time" class="text-xl md:text-3xl font-digital glow-text">--:--:--</span>
-                <button id="format-toggle" class="text-xs bg-white/10 px-2 py-1 rounded hover:bg-white/20 haptic-btn">24H</button>
+    <!-- Step 1: Landing Page -->
+    <div id="landing-page" class="landing-page">
+        <div class="stars"></div>
+        <div class="content">
+            <h1 class="glow-text">Ramadan Pro Timer</h1>
+            <p class="subtitle">! sʜᴏᴡʀᴀᴠ ⚠︎</p>
+            <button id="start-btn" class="ios-btn">Start Timer</button>
+            <div class="features">
+                <span><i class="fas fa-clock"></i> Sehri & Iftar</span>
+                <span><i class="fas fa-magic"></i> Animated Themes</span>
+                <span><i class="fas fa-robot"></i> AI Suggestion</span>
             </div>
         </div>
-    </header>
+    </div>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 w-full flex flex-col lg:flex-row items-center justify-center gap-8 md:gap-16 z-10 my-4">
+    <!-- Main App Layout (Hidden at first) -->
+    <main id="app-container" class="hidden">
         
-        <!-- Left Panel: Next Events Info -->
-        <aside class="glass-panel p-6 w-full lg:w-1/4 max-w-sm flex flex-col gap-6 transform hover:scale-105 transition-transform">
-            <div class="text-center">
-                <h3 class="text-gray-400 uppercase text-sm font-bold">Location</h3>
-                <p id="user-location" class="text-lg text-green-300 font-semibold"><i class="fas fa-map-marker-alt"></i> Locating...</p>
+        <!-- Step 2: Holding Title System -->
+        <header class="holding-bar">
+            <input type="text" id="editable-title" value="আমাদের পরিবারের রমজান টাইমার" spellcheck="false">
+            <div class="title-controls">
+                <input type="color" id="title-color" title="Color">
+                <select id="font-select">
+                    <option value="Poppins">Poppins</option>
+                    <option value="Kalpurush">Kalpurush</option>
+                    <option value="Arial">Arial</option>
+                </select>
             </div>
-            <div class="border-t border-white/10 pt-4">
-                <h3 class="text-gray-400 uppercase text-sm mb-1">Next Sehri</h3>
-                <p id="sehri-time" class="text-2xl font-digital text-white">--:-- AM</p>
-            </div>
-            <div class="border-t border-white/10 pt-4">
-                <h3 class="text-gray-400 uppercase text-sm mb-1">Next Iftar</h3>
-                <p id="iftar-time" class="text-2xl font-digital text-orange-400">--:-- PM</p>
-            </div>
-        </aside>
+        </header>
 
-        <!-- Center: Dynamic Liquid Timer -->
-        <section class="flex flex-col items-center justify-center relative">
-            <h2 id="timer-label" class="text-3xl md:text-4xl font-bold uppercase tracking-widest mb-6 glow-text text-green-400">Loading...</h2>
-            
-            <div id="liquid-timer" class="liquid-box w-[280px] h-[280px] md:w-[380px] md:h-[380px]">
-                <div class="flex items-baseline gap-2 font-digital glow-text drop-shadow-2xl">
-                    <span id="hours" class="text-5xl md:text-7xl">00</span><span class="text-2xl md:text-4xl pb-2 text-white/50">:</span>
-                    <span id="minutes" class="text-5xl md:text-7xl">00</span><span class="text-2xl md:text-4xl pb-2 text-white/50">:</span>
-                    <span id="seconds" class="text-5xl md:text-7xl">00</span>
-                </div>
-            </div>
+        <!-- Step 3: Real Time Clock -->
+        <div class="rt-clock" id="clock-display">00:00:00</div>
 
-            <!-- Timer Controls -->
-            <div class="flex gap-4 mt-8">
-                <button onclick="zoomTimer(1.1)" class="glass-panel px-4 py-2 hover:bg-white/20 haptic-btn" title="Zoom In"><i class="fas fa-search-plus"></i></button>
-                <button onclick="zoomTimer(0.9)" class="glass-panel px-4 py-2 hover:bg-white/20 haptic-btn" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
-                <button onclick="resetTimer()" class="glass-panel px-4 py-2 hover:bg-red-500/50 text-red-300 haptic-btn" title="Reset"><i class="fas fa-redo"></i> Reset</button>
-                <button onclick="document.getElementById('set-time-modal').classList.remove('hidden')" class="glass-panel px-4 py-2 hover:bg-green-500/50 text-green-300 haptic-btn"><i class="fas fa-clock"></i> Custom</button>
+        <!-- Step 4 & 5: Sehri & Iftar Boxes -->
+        <section class="prayer-times">
+            <div class="timer-box sehri-box">
+                <h3>সেহরির সময় বাকি</h3>
+                <div id="sehri-countdown" class="count">--:--:--</div>
+            </div>
+            <div class="timer-box iftar-box">
+                <h3>ইফতারের সময় বাকি</h3>
+                <div id="iftar-countdown" class="count">--:--:--</div>
             </div>
         </section>
 
-        <!-- Right Panel: AI Suggestions & Audio -->
-        <aside class="w-full lg:w-1/4 max-w-sm flex flex-col gap-4">
-            <!-- AI Suggestion Box -->
-            <div class="glass-panel p-6 relative overflow-hidden group">
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
-                <h3 class="text-sm uppercase text-gray-400 mb-2 flex justify-between items-center">
-                    <span><i class="fas fa-robot text-purple-400"></i> AI Assistant</span>
-                    <button onclick="fetchAITip()" class="text-xs bg-white/10 px-2 py-1 rounded hover:bg-white/20 haptic-btn"><i class="fas fa-sync-alt"></i></button>
-                </h3>
-                <p id="ai-suggestion" class="text-sm italic text-gray-200 transition-opacity duration-500">"Drink plenty of water during Sehri to stay hydrated. Focus on complex carbohydrates..."</p>
-            </div>
-
-            <!-- Audio Controller -->
-            <div class="glass-panel p-6">
-                <h3 class="text-sm uppercase text-gray-400 mb-4"><i class="fas fa-music text-green-400"></i> Halal Sounds</h3>
-                <select id="audio-select" class="w-full bg-black/50 border border-white/20 rounded p-2 text-sm mb-3 outline-none focus:border-green-400">
-                    <option value="azan_makkah">Azan (Makkah)</option>
-                    <option value="azan_madinah">Azan (Madinah)</option>
-                    <option value="quran_short">Quran Recitation</option>
-                    <option value="nasheed_calm">Calm Nasheed</option>
-                    <option value="custom">-- Upload Custom --</option>
-                </select>
-                <input type="file" id="custom-audio-upload" accept="audio/*" class="hidden">
-                <div class="flex justify-between items-center mt-2">
-                    <button id="test-audio" class="text-sm bg-white/10 px-4 py-2 rounded hover:bg-green-500/50 haptic-btn"><i class="fas fa-play"></i> Test</button>
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-volume-up text-xs"></i>
-                        <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" class="w-20 accent-green-400">
+        <!-- Step 6 & 7: Main Timer & Liquid Animation -->
+        <section class="main-timer-section">
+            <div class="timer-card" id="timer-card">
+                <div class="liquid-bg" id="liquid-wave"></div>
+                <div class="timer-content">
+                    <h2 id="main-countdown">00:00:00</h2>
+                    <div class="timer-btns">
+                        <button onclick="zoomTimer(1.1)" class="zoom-btn"><i class="fas fa-plus"></i></button>
+                        <button id="set-timer-btn" class="action-btn">Set</button>
+                        <button id="reset-btn" class="action-btn">Reset</button>
+                        <button onclick="zoomTimer(0.9)" class="zoom-btn"><i class="fas fa-minus"></i></button>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Theme Selector -->
-            <div class="glass-panel p-6">
-                <h3 class="text-sm uppercase text-gray-400 mb-2"><i class="fas fa-image text-blue-400"></i> Dynamic Theme</h3>
-                <select id="theme-select" class="w-full bg-black/50 border border-white/20 rounded p-2 text-sm outline-none focus:border-blue-400 haptic-btn">
-                    <option value="theme-night">Night Sky (Moon)</option>
-                    <option value="theme-stars">Twinkling Stars</option>
-                    <option value="theme-forest">Nature Forest</option>
-                    <option value="theme-sunrise">Village Sunrise</option>
-                    <option value="theme-desert">Desert Dunes</option>
-                    <option value="theme-city">City Skyline Night</option>
-                    <option value="theme-rain">Rainy Day</option>
-                    <option value="theme-ocean">Calm Ocean Waves</option>
-                    <option value="theme-neon">Futuristic Neon</option>
-                    <option value="theme-flowers">Flowers Bloom</option>
-                </select>
+        <!-- Step 11: AI Suggestion Box -->
+        <div id="ai-suggestion-box" class="ai-box">
+            <i class="fas fa-robot"></i>
+            <p id="ai-text">রমজানে সুস্থ থাকতে বেশি করে পানি পান করুন।</p>
+        </div>
+
+        <!-- Step 8, 9, 10, 12: Sidebar Settings -->
+        <aside class="settings-panel">
+            <button id="toggle-settings"><i class="fas fa-cog"></i></button>
+            <div class="panel-content">
+                <h4>Themes</h4>
+                <div class="theme-grid" id="theme-switcher">
+                    <!-- Themes will be injected by JS -->
+                </div>
+                <h4>Sounds</h4>
+                <select id="sound-select"></select>
+                <input type="file" id="custom-audio" accept="audio/*">
+                <button onclick="toggleFullscreen()"><i class="fas fa-expand"></i> Full Screen</button>
             </div>
         </aside>
+
     </main>
 
-    <!-- Hidden Audio Elements -->
-    <audio id="alarm-audio" preload="auto"></audio>
-
-    <!-- Settings Modal (Font/Color) -->
-    <div id="settings-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center backdrop-blur-sm">
-        <div class="glass-panel p-8 max-w-md w-full relative">
-            <button onclick="closeSettings()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
-            <h2 class="text-2xl mb-4 font-bold">Customize Header</h2>
-            <label class="block mb-2 text-sm">Font Style</label>
-            <select id="font-select" class="w-full bg-black/50 border border-white/20 rounded p-2 mb-4">
-                <option value="'Poppins', sans-serif">Poppins (Modern)</option>
-                <option value="'Orbitron', sans-serif">Orbitron (Digital)</option>
-                <option value="'Courier New', monospace">Monospace</option>
-            </select>
-            <label class="block mb-2 text-sm">Header Color</label>
-            <input type="color" id="header-color" value="#ffffff" class="w-full h-10 bg-transparent border-0 rounded cursor-pointer mb-6">
-            <button onclick="saveSettings()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded font-bold haptic-btn">Save Changes</button>
-        </div>
-    </div>
-
-    <!-- Custom Time Modal -->
-    <div id="set-time-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center backdrop-blur-sm">
-        <div class="glass-panel p-8 max-w-sm w-full relative">
-            <button onclick="document.getElementById('set-time-modal').classList.remove('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
-            <h2 class="text-2xl mb-4 font-bold">Set Custom Timer</h2>
-            <input type="datetime-local" id="custom-time-input" class="w-full bg-black/50 border border-white/20 rounded p-2 mb-6 text-white color-scheme-dark">
-            <button onclick="setCustomTime()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-bold haptic-btn">Start Timer</button>
-        </div>
-    </div>
-
-    <script>
-        // --- STATE & INITIALIZATION ---
-        const state = {
-            is24Hour: true,
-            theme: localStorage.getItem('ramadan_theme') || 'theme-night',
-            customEndTime: null,
-            timerZoom: 1,
-            audioVolume: 0.5,
-            targetTime: null,
-            mode: 'loading' // loading, sehri, iftar, custom
-        };
-
-        // DOM Elements
-        const DOM = {
-            h: document.getElementById('hours'),
-            m: document.getElementById('minutes'),
-            s: document.getElementById('seconds'),
-            localTime: document.getElementById('local-time'),
-            formatToggle: document.getElementById('format-toggle'),
-            themeSelect: document.getElementById('theme-select'),
-            bgContainer: document.getElementById('bg-container'),
-            timerBox: document.getElementById('liquid-timer'),
-            timerLabel: document.getElementById('timer-label'),
-            audioSelect: document.getElementById('audio-select'),
-            audioPlayer: document.getElementById('alarm-audio'),
-            volumeInput: document.getElementById('volume'),
-            testAudioBtn: document.getElementById('test-audio'),
-            uploadInput: document.getElementById('custom-audio-upload')
-        };
-
-        // Audio Placeholders
-        const AUDIO_SOURCES = {
-            azan_makkah: "https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg", 
-            azan_madinah: "https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg", 
-            quran_short: "https://actions.google.com/sounds/v1/water/waves_crashing_on_rock_beach.ogg", 
-            nasheed_calm: "https://actions.google.com/sounds/v1/science_fiction/alien_breath.ogg" 
-        };
-
-        let countdownInterval, clockInterval;
-        let particlesArray =[];
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-
-        // --- CORE FUNCTIONS ---
-        function init() {
-            applyTheme(state.theme);
-            DOM.themeSelect.value = state.theme;
-            
-            document.getElementById('main-title').addEventListener('input', (e) => {
-                localStorage.setItem('ramadan_header', e.target.innerText);
-            });
-            if(localStorage.getItem('ramadan_header')) {
-                document.getElementById('main-title').innerText = localStorage.getItem('ramadan_header');
-            }
-            if(localStorage.getItem('ramadan_font')) {
-                document.getElementById('main-title').style.fontFamily = localStorage.getItem('ramadan_font');
-            }
-            if(localStorage.getItem('ramadan_color')) {
-                document.getElementById('main-title').style.color = localStorage.getItem('ramadan_color');
-            }
-
-            updateLocalTime();
-            clockInterval = setInterval(updateLocalTime, 1000);
-            
-            // Call specific Narayanganj Location function
-            fetchLocationAndTimings();
-
-            setupEventListeners();
-            
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
-            animateParticles();
-            
-            fetchAITip();
-        }
-
-        // --- TIME & TIMERS ---
-        function updateLocalTime() {
-            const now = new Date();
-            let h = now.getHours();
-            let m = now.getMinutes();
-            let s = now.getSeconds();
-            
-            if (!state.is24Hour) {
-                const ampm = h >= 12 ? ' PM' : ' AM';
-                h = h % 12 || 12;
-                DOM.localTime.innerText = `${pad(h)}:${pad(m)}:${pad(s)}${ampm}`;
-            } else {
-                DOM.localTime.innerText = `${pad(h)}:${pad(m)}:${pad(s)}`;
-            }
-        }
-
-        async function fetchLocationAndTimings() {
-            try {
-                // 1. Setting exact specific location manually
-                const locationName = "Rupshi, Rupganj, Narayanganj";
-                const latitude = 23.7881;
-                const longitude = 90.5122;
-
-                document.getElementById('user-location').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${locationName}`;
-
-                // 2. Fetching accurate timings for Rupshi, Rupganj using Aladhan exact coordinate API
-                const date = new Date();
-                const dd = String(date.getDate()).padStart(2, '0');
-                const mm = String(date.getMonth() + 1).padStart(2, '0');
-                const yyyy = date.getFullYear();
-                
-                // Method 1: University of Islamic Sciences, Karachi (Best standard for South Asia/Bangladesh region in this API)
-                const apiURL = `https://api.aladhan.com/v1/timings/${dd}-${mm}-${yyyy}?latitude=${latitude}&longitude=${longitude}&method=1`;
-                
-                const prayerRes = await fetch(apiURL);
-                const prayerData = await prayerRes.json();
-                
-                const timings = prayerData.data.timings;
-                
-                // Set and Format for Display
-                document.getElementById('sehri-time').innerText = formatTimeDisplay(timings.Fajr, 'AM');
-                document.getElementById('iftar-time').innerText = formatTimeDisplay(timings.Maghrib, 'PM');
-
-                // Pass to Logic Builder
-                calculateNextEvent(timings.Fajr, timings.Maghrib);
-
-            } catch (error) {
-                console.error("API Error:", error);
-                document.getElementById('user-location').innerText = "Location Offline";
-                DOM.timerLabel.innerText = "API Offline - Set Custom Timer";
-            }
-        }
-
-        function formatTimeDisplay(timeStr, suffix) {
-            let [h, m] = timeStr.split(':');
-            let hr = parseInt(h);
-            let ampm = hr >= 12 ? 'PM' : 'AM';
-            hr = hr % 12 || 12;
-            return `${pad(hr)}:${m} ${ampm}`;
-        }
-
-        function calculateNextEvent(fajrStr, maghribStr) {
-            const now = new Date();
-            
-            const getTimestamp = (timeStr) => {
-                let [h, m] = timeStr.split(':');
-                let d = new Date();
-                d.setHours(parseInt(h), parseInt(m), 0, 0);
-                return d.getTime();
-            };
-
-            let fajrTime = getTimestamp(fajrStr);
-            let maghribTime = getTimestamp(maghribStr);
-            let currentTime = now.getTime();
-
-            if (currentTime < fajrTime) {
-                state.mode = 'sehri';
-                state.targetTime = fajrTime;
-                DOM.timerLabel.innerText = "Time until Sehri";
-                DOM.timerLabel.className = "text-3xl md:text-4xl font-bold uppercase tracking-widest mb-6 glow-text text-blue-400";
-            } else if (currentTime < maghribTime) {
-                state.mode = 'iftar';
-                state.targetTime = maghribTime;
-                DOM.timerLabel.innerText = "Time until Iftar";
-                DOM.timerLabel.className = "text-3xl md:text-4xl font-bold uppercase tracking-widest mb-6 glow-text text-orange-400";
-            } else {
-                state.mode = 'sehri';
-                state.targetTime = fajrTime + (24 * 60 * 60 * 1000);
-                DOM.timerLabel.innerText = "Time until Sehri (Next Day)";
-                DOM.timerLabel.className = "text-3xl md:text-4xl font-bold uppercase tracking-widest mb-6 glow-text text-blue-400";
-            }
-
-            startCountdown();
-        }
-
-        function startCountdown() {
-            clearInterval(countdownInterval);
-            countdownInterval = setInterval(() => {
-                const now = new Date().getTime();
-                const distance = state.targetTime - now;
-
-                if (distance <= 0) {
-                    clearInterval(countdownInterval);
-                    DOM.h.innerText = "00";
-                    DOM.m.innerText = "00";
-                    DOM.s.innerText = "00";
-                    triggerAlarm();
-                    return;
-                }
-
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                if (DOM.s.innerText !== pad(seconds)) {
-                    gsap.fromTo(DOM.s, { y: -10, opacity: 0.5 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" });
-                }
-
-                DOM.h.innerText = pad(hours);
-                DOM.m.innerText = pad(minutes);
-                DOM.s.innerText = pad(seconds);
-
-            }, 1000);
-        }
-
-        // --- AUDIO CONTROLS ---
-        function triggerAlarm() {
-            DOM.audioPlayer.volume = state.audioVolume;
-            DOM.audioPlayer.play().catch(e => console.log("Audio autoplay prevented"));
-            gsap.to(DOM.timerBox, { x:[-10, 10, -10, 10, 0], duration: 0.5, repeat: 5 });
-            if (navigator.vibrate) navigator.vibrate([500, 200, 500]);
-        }
-
-        function setAudioSource() {
-            const val = DOM.audioSelect.value;
-            if (val === 'custom') {
-                DOM.uploadInput.click();
-            } else {
-                DOM.audioPlayer.src = AUDIO_SOURCES[val];
-            }
-        }
-
-        // --- INTERACTIVITY & CONTROLS ---
-        function setupEventListeners() {
-            DOM.formatToggle.addEventListener('click', () => {
-                hapticFeedback();
-                state.is24Hour = !state.is24Hour;
-                DOM.formatToggle.innerText = state.is24Hour ? "24H" : "12H";
-                updateLocalTime();
-            });
-
-            DOM.themeSelect.addEventListener('change', (e) => {
-                hapticFeedback();
-                applyTheme(e.target.value);
-            });
-
-            DOM.audioSelect.addEventListener('change', setAudioSource);
-            
-            DOM.uploadInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const url = URL.createObjectURL(file);
-                    DOM.audioPlayer.src = url;
-                    DOM.audioSelect.options[DOM.audioSelect.selectedIndex].text = `Custom: ${file.name.substring(0,15)}...`;
-                }
-            });
-
-            DOM.volumeInput.addEventListener('input', (e) => {
-                state.audioVolume = e.target.value;
-                DOM.audioPlayer.volume = state.audioVolume;
-            });
-
-            DOM.testAudioBtn.addEventListener('click', () => {
-                hapticFeedback();
-                if(DOM.audioPlayer.paused) {
-                    DOM.audioPlayer.volume = state.audioVolume;
-                    DOM.audioPlayer.play();
-                    DOM.testAudioBtn.innerHTML = '<i class="fas fa-stop"></i> Stop';
-                } else {
-                    DOM.audioPlayer.pause();
-                    DOM.audioPlayer.currentTime = 0;
-                    DOM.testAudioBtn.innerHTML = '<i class="fas fa-play"></i> Test';
-                }
-            });
-
-            document.querySelectorAll('.haptic-btn').forEach(btn => {
-                btn.addEventListener('click', hapticFeedback);
-            });
-        }
-
-        function hapticFeedback() {
-            if (navigator.vibrate) navigator.vibrate(50);
-        }
-
-        function zoomTimer(factor) {
-            state.timerZoom *= factor;
-            if(state.timerZoom > 1.5) state.timerZoom = 1.5;
-            if(state.timerZoom < 0.6) state.timerZoom = 0.6;
-            gsap.to(DOM.timerBox, { scale: state.timerZoom, duration: 0.4, ease: "back.out(1.7)" });
-        }
-
-        function resetTimer() {
-            fetchLocationAndTimings(); 
-            gsap.fromTo(DOM.timerBox, { rotationX: 90 }, { rotationX: 0, duration: 0.6, ease: "bounce.out" });
-        }
-
-        function setCustomTime() {
-            const input = document.getElementById('custom-time-input').value;
-            if(!input) return;
-            state.targetTime = new Date(input).getTime();
-            state.mode = 'custom';
-            DOM.timerLabel.innerText = "Custom Timer";
-            DOM.timerLabel.className = "text-3xl md:text-4xl font-bold uppercase tracking-widest mb-6 glow-text text-purple-400";
-            document.getElementById('set-time-modal').classList.add('hidden');
-            startCountdown();
-            gsap.fromTo(DOM.timerBox, { scale: 0.5, opacity: 0 }, { scale: state.timerZoom, opacity: 1, duration: 0.5 });
-        }
-
-        // --- SETTINGS MODAL ---
-        function openSettings() { document.getElementById('settings-modal').classList.remove('hidden'); }
-        function closeSettings() { document.getElementById('settings-modal').classList.add('hidden'); }
-        function saveSettings() {
-            const font = document.getElementById('font-select').value;
-            const color = document.getElementById('header-color').value;
-            const title = document.getElementById('main-title');
-            title.style.fontFamily = font;
-            title.style.color = color;
-            localStorage.setItem('ramadan_font', font);
-            localStorage.setItem('ramadan_color', color);
-            closeSettings();
-        }
-
-        // --- THEMES & PARTICLES ---
-        function applyTheme(themeName) {
-            state.theme = themeName;
-            localStorage.setItem('ramadan_theme', themeName);
-            DOM.bgContainer.className = '';
-            DOM.bgContainer.classList.add(themeName);
-            createParticles(themeName);
-        }
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            createParticles(state.theme);
-        }
-
-        function createParticles(theme) {
-            particlesArray =[];
-            let count = 0;
-            let type = 'none';
-            if(theme === 'theme-stars' || theme === 'theme-night' || theme === 'theme-city') {
-                count = 100; type = 'star';
-            } else if(theme === 'theme-rain') {
-                count = 150; type = 'rain';
-            } else if(theme === 'theme-flowers') {
-                count = 50; type = 'petal';
-            } else if(theme === 'theme-forest') {
-                count = 60; type = 'firefly';
-            } else if(theme === 'theme-ocean') {
-                count = 40; type = 'bubble';
-            }
-            for(let i=0; i<count; i++) particlesArray.push(new Particle(type));
-        }
-
-        class Particle {
-            constructor(type) {
-                this.type = type;
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 3 + 1;
-                this.speedX = Math.random() * 2 - 1;
-                this.speedY = Math.random() * 2 - 1;
-                
-                if(this.type === 'rain') {
-                    this.speedY = Math.random() * 5 + 5;
-                    this.speedX = Math.random() * 1;
-                    this.size = Math.random() * 2;
-                } else if(this.type === 'bubble') {
-                    this.speedY = -(Math.random() * 2 + 1);
-                } else if(this.type === 'petal') {
-                    this.speedY = Math.random() * 2 + 1;
-                    this.speedX = Math.random() * 3 - 1.5;
-                    this.size = Math.random() * 5 + 2;
-                }
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                if(this.type === 'rain' || this.type === 'petal') {
-                    if(this.y > canvas.height) { this.y = 0; this.x = Math.random() * canvas.width; }
-                } else if(this.type === 'bubble') {
-                    if(this.y < 0) { this.y = canvas.height; this.x = Math.random() * canvas.width; }
-                } else {
-                    if(this.x > canvas.width) this.x = 0;
-                    if(this.x < 0) this.x = canvas.width;
-                    if(this.y > canvas.height) this.y = 0;
-                    if(this.y < 0) this.y = canvas.height;
-                }
-            }
-            draw() {
-                ctx.beginPath();
-                if(this.type === 'star' || this.type === 'firefly') {
-                    ctx.fillStyle = this.type==='firefly' ? 'rgba(173, 255, 47, 0.8)' : 'rgba(255, 255, 255, 0.8)';
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                } else if (this.type === 'rain') {
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-                    ctx.rect(this.x, this.y, 1, this.size * 10);
-                } else if (this.type === 'bubble') {
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-                    ctx.lineWidth = 1;
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.stroke();
-                    return;
-                } else if (this.type === 'petal') {
-                    ctx.fillStyle = 'rgba(255, 182, 193, 0.6)';
-                    ctx.ellipse(this.x, this.y, this.size, this.size*1.5, this.speedX, 0, Math.PI*2);
-                }
-                ctx.fill();
-            }
-        }
-
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for(let i=0; i<particlesArray.length; i++){
-                particlesArray[i].update();
-                particlesArray[i].draw();
-            }
-            requestAnimationFrame(animateParticles);
-        }
-
-        // --- AI ASSISTANT ---
-        const aiTips =[
-            "Hydrate well during Sehri. Aim for at least 2 glasses of water.",
-            "Eat complex carbs like oats during Sehri for long-lasting energy.",
-            "Break your fast with dates; they restore blood sugar instantly.",
-            "Avoid overly salty foods at Sehri to prevent severe thirst.",
-            "Make sincere Dua before opening your fast. It's a guaranteed accepted time."
-        ];
-
-        function fetchAITip() {
-            const tipEl = document.getElementById('ai-suggestion');
-            gsap.to(tipEl, { opacity: 0, duration: 0.3, onComplete: () => {
-                const randomTip = aiTips[Math.floor(Math.random() * aiTips.length)];
-                tipEl.innerText = `"${randomTip}"`;
-                gsap.to(tipEl, { opacity: 1, duration: 0.5 });
-            }});
-        }
-
-        const pad = (num) => String(num).padStart(2, '0');
-
-        window.onload = () => {
-            setAudioSource(); 
-            init();
-            gsap.from('header', { y: -50, opacity: 0, duration: 1, ease: "power3.out" });
-            gsap.from('aside', { x: -50, opacity: 0, duration: 1, stagger: 0.2, ease: "power3.out" });
-            gsap.from(DOM.timerBox, { scale: 0.5, opacity: 0, duration: 1.2, ease: "elastic.out(1, 0.5)", delay: 0.3 });
-        };
-    </script>
+    <audio id="alarm-sound" loop></audio>
+    <script src="script.js"></script>
 </body>
 </html>
