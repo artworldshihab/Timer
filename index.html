@@ -249,12 +249,12 @@
             uploadInput: document.getElementById('custom-audio-upload')
         };
 
-        // Audio Placeholders (Using reliable public domain/free URLs for demo, users can upload their own)
+        // Audio Placeholders
         const AUDIO_SOURCES = {
-            azan_makkah: "https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg", // Placeholder
-            azan_madinah: "https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg", // Placeholder
-            quran_short: "https://actions.google.com/sounds/v1/water/waves_crashing_on_rock_beach.ogg", // Placeholder nature sound
-            nasheed_calm: "https://actions.google.com/sounds/v1/science_fiction/alien_breath.ogg" // Placeholder
+            azan_makkah: "https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg", 
+            azan_madinah: "https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg", 
+            quran_short: "https://actions.google.com/sounds/v1/water/waves_crashing_on_rock_beach.ogg", 
+            nasheed_calm: "https://actions.google.com/sounds/v1/science_fiction/alien_breath.ogg" 
         };
 
         let countdownInterval, clockInterval;
@@ -263,13 +263,10 @@
         const ctx = canvas.getContext('2d');
 
         // --- CORE FUNCTIONS ---
-        
         function init() {
-            // Apply saved settings
             applyTheme(state.theme);
             DOM.themeSelect.value = state.theme;
             
-            // Header events
             document.getElementById('main-title').addEventListener('input', (e) => {
                 localStorage.setItem('ramadan_header', e.target.innerText);
             });
@@ -283,27 +280,22 @@
                 document.getElementById('main-title').style.color = localStorage.getItem('ramadan_color');
             }
 
-            // Start Clocks
             updateLocalTime();
             clockInterval = setInterval(updateLocalTime, 1000);
             
-            // Fetch Geo/Timings
+            // Call specific Narayanganj Location function
             fetchLocationAndTimings();
 
-            // Event Listeners
             setupEventListeners();
             
-            // Canvas resize
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
             animateParticles();
             
-            // AI init
             fetchAITip();
         }
 
         // --- TIME & TIMERS ---
-
         function updateLocalTime() {
             const now = new Date();
             let h = now.getHours();
@@ -321,30 +313,32 @@
 
         async function fetchLocationAndTimings() {
             try {
-                // 1. Get Geo-IP using a free public API
-                const geoRes = await fetch('https://ipapi.co/json/');
-                const geoData = await geoRes.json();
-                
-                document.getElementById('user-location').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${geoData.city || 'Unknown'}, ${geoData.country_name || ''}`;
+                // 1. Setting exact specific location manually
+                const locationName = "Rupshi, Rupganj, Narayanganj";
+                const latitude = 23.7881;
+                const longitude = 90.5122;
 
-                // 2. Fetch Islamic Prayer Times (Aladhan API)
+                document.getElementById('user-location').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${locationName}`;
+
+                // 2. Fetching accurate timings for Rupshi, Rupganj using Aladhan exact coordinate API
                 const date = new Date();
                 const dd = String(date.getDate()).padStart(2, '0');
                 const mm = String(date.getMonth() + 1).padStart(2, '0');
                 const yyyy = date.getFullYear();
                 
-                const apiURL = `https://api.aladhan.com/v1/timingsByCity/${dd}-${mm}-${yyyy}?city=${geoData.city}&country=${geoData.country_name}&method=2`;
+                // Method 1: University of Islamic Sciences, Karachi (Best standard for South Asia/Bangladesh region in this API)
+                const apiURL = `https://api.aladhan.com/v1/timings/${dd}-${mm}-${yyyy}?latitude=${latitude}&longitude=${longitude}&method=1`;
                 
                 const prayerRes = await fetch(apiURL);
                 const prayerData = await prayerRes.json();
                 
                 const timings = prayerData.data.timings;
                 
-                // Format for display
+                // Set and Format for Display
                 document.getElementById('sehri-time').innerText = formatTimeDisplay(timings.Fajr, 'AM');
                 document.getElementById('iftar-time').innerText = formatTimeDisplay(timings.Maghrib, 'PM');
 
-                // Determine Next Event Logic
+                // Pass to Logic Builder
                 calculateNextEvent(timings.Fajr, timings.Maghrib);
 
             } catch (error) {
@@ -355,7 +349,6 @@
         }
 
         function formatTimeDisplay(timeStr, suffix) {
-            // Converts "04:30" to 12h format if needed, but keeping simple for display
             let [h, m] = timeStr.split(':');
             let hr = parseInt(h);
             let ampm = hr >= 12 ? 'PM' : 'AM';
@@ -388,10 +381,10 @@
                 DOM.timerLabel.innerText = "Time until Iftar";
                 DOM.timerLabel.className = "text-3xl md:text-4xl font-bold uppercase tracking-widest mb-6 glow-text text-orange-400";
             } else {
-                // Next day's Sehri (Add 24 hours approx)
                 state.mode = 'sehri';
                 state.targetTime = fajrTime + (24 * 60 * 60 * 1000);
                 DOM.timerLabel.innerText = "Time until Sehri (Next Day)";
+                DOM.timerLabel.className = "text-3xl md:text-4xl font-bold uppercase tracking-widest mb-6 glow-text text-blue-400";
             }
 
             startCountdown();
@@ -416,7 +409,6 @@
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                // Animate Seconds slightly using GSAP for smoothness
                 if (DOM.s.innerText !== pad(seconds)) {
                     gsap.fromTo(DOM.s, { y: -10, opacity: 0.5 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" });
                 }
@@ -429,12 +421,10 @@
         }
 
         // --- AUDIO CONTROLS ---
-
         function triggerAlarm() {
             DOM.audioPlayer.volume = state.audioVolume;
-            DOM.audioPlayer.play().catch(e => console.log("Audio autoplay prevented by browser"));
-            // Shake effect
-            gsap.to(DOM.timerBox, { x: [-10, 10, -10, 10, 0], duration: 0.5, repeat: 5 });
+            DOM.audioPlayer.play().catch(e => console.log("Audio autoplay prevented"));
+            gsap.to(DOM.timerBox, { x:[-10, 10, -10, 10, 0], duration: 0.5, repeat: 5 });
             if (navigator.vibrate) navigator.vibrate([500, 200, 500]);
         }
 
@@ -448,7 +438,6 @@
         }
 
         // --- INTERACTIVITY & CONTROLS ---
-
         function setupEventListeners() {
             DOM.formatToggle.addEventListener('click', () => {
                 hapticFeedback();
@@ -469,7 +458,6 @@
                 if (file) {
                     const url = URL.createObjectURL(file);
                     DOM.audioPlayer.src = url;
-                    // Change select text to indicate custom is loaded
                     DOM.audioSelect.options[DOM.audioSelect.selectedIndex].text = `Custom: ${file.name.substring(0,15)}...`;
                 }
             });
@@ -492,7 +480,6 @@
                 }
             });
 
-            // Make haptic buttons trigger vibration
             document.querySelectorAll('.haptic-btn').forEach(btn => {
                 btn.addEventListener('click', hapticFeedback);
             });
@@ -504,64 +491,48 @@
 
         function zoomTimer(factor) {
             state.timerZoom *= factor;
-            // Min/Max clamp
             if(state.timerZoom > 1.5) state.timerZoom = 1.5;
             if(state.timerZoom < 0.6) state.timerZoom = 0.6;
-            
             gsap.to(DOM.timerBox, { scale: state.timerZoom, duration: 0.4, ease: "back.out(1.7)" });
         }
 
         function resetTimer() {
-            fetchLocationAndTimings(); // Reset back to API based
+            fetchLocationAndTimings(); 
             gsap.fromTo(DOM.timerBox, { rotationX: 90 }, { rotationX: 0, duration: 0.6, ease: "bounce.out" });
         }
 
         function setCustomTime() {
             const input = document.getElementById('custom-time-input').value;
             if(!input) return;
-            
             state.targetTime = new Date(input).getTime();
             state.mode = 'custom';
             DOM.timerLabel.innerText = "Custom Timer";
             DOM.timerLabel.className = "text-3xl md:text-4xl font-bold uppercase tracking-widest mb-6 glow-text text-purple-400";
-            
             document.getElementById('set-time-modal').classList.add('hidden');
             startCountdown();
             gsap.fromTo(DOM.timerBox, { scale: 0.5, opacity: 0 }, { scale: state.timerZoom, opacity: 1, duration: 0.5 });
         }
 
         // --- SETTINGS MODAL ---
-        function openSettings() {
-            document.getElementById('settings-modal').classList.remove('hidden');
-        }
-        function closeSettings() {
-            document.getElementById('settings-modal').classList.add('hidden');
-        }
+        function openSettings() { document.getElementById('settings-modal').classList.remove('hidden'); }
+        function closeSettings() { document.getElementById('settings-modal').classList.add('hidden'); }
         function saveSettings() {
             const font = document.getElementById('font-select').value;
             const color = document.getElementById('header-color').value;
             const title = document.getElementById('main-title');
-            
             title.style.fontFamily = font;
             title.style.color = color;
-            
             localStorage.setItem('ramadan_font', font);
             localStorage.setItem('ramadan_color', color);
-            
             closeSettings();
         }
 
         // --- THEMES & PARTICLES ---
-
         function applyTheme(themeName) {
             state.theme = themeName;
             localStorage.setItem('ramadan_theme', themeName);
-            
-            // Remove all theme classes
             DOM.bgContainer.className = '';
             DOM.bgContainer.classList.add(themeName);
-            
-            // Re-init particles based on theme
             createParticles(themeName);
         }
 
@@ -574,8 +545,7 @@
         function createParticles(theme) {
             particlesArray =[];
             let count = 0;
-            let type = 'none'; // star, rain, petal, firefly
-            
+            let type = 'none';
             if(theme === 'theme-stars' || theme === 'theme-night' || theme === 'theme-city') {
                 count = 100; type = 'star';
             } else if(theme === 'theme-rain') {
@@ -587,10 +557,7 @@
             } else if(theme === 'theme-ocean') {
                 count = 40; type = 'bubble';
             }
-
-            for(let i=0; i<count; i++) {
-                particlesArray.push(new Particle(type));
-            }
+            for(let i=0; i<count; i++) particlesArray.push(new Particle(type));
         }
 
         class Particle {
@@ -618,7 +585,6 @@
                 this.x += this.speedX;
                 this.y += this.speedY;
 
-                // Reset bounds
                 if(this.type === 'rain' || this.type === 'petal') {
                     if(this.y > canvas.height) { this.y = 0; this.x = Math.random() * canvas.width; }
                 } else if(this.type === 'bubble') {
@@ -662,39 +628,32 @@
         }
 
         // --- AI ASSISTANT ---
-
         const aiTips =[
             "Hydrate well during Sehri. Aim for at least 2 glasses of water.",
             "Eat complex carbs like oats during Sehri for long-lasting energy.",
             "Break your fast with dates; they restore blood sugar instantly.",
             "Avoid overly salty foods at Sehri to prevent severe thirst.",
-            "Use the Pomodoro technique to read Quran: 25 mins reading, 5 mins break.",
             "Make sincere Dua before opening your fast. It's a guaranteed accepted time."
         ];
 
         function fetchAITip() {
             const tipEl = document.getElementById('ai-suggestion');
             gsap.to(tipEl, { opacity: 0, duration: 0.3, onComplete: () => {
-                // Placeholder for real API: e.g., fetch('https://api.openai.com/v1/...')
                 const randomTip = aiTips[Math.floor(Math.random() * aiTips.length)];
                 tipEl.innerText = `"${randomTip}"`;
                 gsap.to(tipEl, { opacity: 1, duration: 0.5 });
             }});
         }
 
-        // Utility: Pad zeros
         const pad = (num) => String(num).padStart(2, '0');
 
-        // Initial setup
         window.onload = () => {
-            setAudioSource(); // Initial audio load
+            setAudioSource(); 
             init();
-            // Intro Animation
             gsap.from('header', { y: -50, opacity: 0, duration: 1, ease: "power3.out" });
             gsap.from('aside', { x: -50, opacity: 0, duration: 1, stagger: 0.2, ease: "power3.out" });
             gsap.from(DOM.timerBox, { scale: 0.5, opacity: 0, duration: 1.2, ease: "elastic.out(1, 0.5)", delay: 0.3 });
         };
-
     </script>
 </body>
 </html>
