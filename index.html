@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TimeMaster Ultra - Ramadan Timer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header Holder -->
+  <header class="header-holder">
+    <div class="title-box" contenteditable="true">Your Custom Ramadan Timer</div>
+    <div class="current-time">00:00:00</div>
+  </header>
+
+  <!-- Main Timer Box -->
+  <main class="timer-container">
+    <div class="timer-box">
+      <div class="sehri-timer">Sehri: <span id="sehri-count">00:00:00</span></div>
+      <div class="iftar-timer">Iftar: <span id="iftar-count">00:00:00</span></div>
+    </div>
+
+    <!-- Liquid Box / Animations -->
+    <div class="liquid-box"></div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button id="set-time">Set Time</button>
+      <button id="reset-time">Reset</button>
+      <button id="zoom-in">Zoom In</button>
+      <button id="zoom-out">Zoom Out</button>
+      <button id="theme-next">Next Theme</button>
+      <button id="theme-prev">Prev Theme</button>
+      <input type="file" id="custom-sound" accept="audio/*">
+    </div>
+
+    <!-- AI Suggestion Box -->
+    <div class="ai-suggestion">
+      <p id="ai-text">AI Suggestion: “Stay hydrated during Sehri!”</p>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
