@@ -2,99 +2,378 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ramadan Pro Timer | ! sʜᴏᴡʀᴀᴠ ⚠︎</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body class="theme-default">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ramadan Supreme | Mastered by Showrav</title>
+    
+    <!-- Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Poppins:wght@300;600;900&family=Hind+Siliguri:wght@400;700&family=Orbitron:wght@900&display=swap" rel="stylesheet">
 
-    <!-- Step 1: Landing Page -->
-    <div id="landing-page" class="landing-page">
-        <div class="stars"></div>
-        <div class="content">
-            <h1 class="glow-text">Ramadan Pro Timer</h1>
-            <p class="subtitle">! sʜᴏᴡʀᴀᴠ ⚠︎</p>
-            <button id="start-btn" class="ios-btn">Start Timer</button>
-            <div class="features">
-                <span><i class="fas fa-clock"></i> Sehri & Iftar</span>
-                <span><i class="fas fa-magic"></i> Animated Themes</span>
-                <span><i class="fas fa-robot"></i> AI Suggestion</span>
+    <style>
+        :root {
+            /* Your Specific Mix: Purple, White, Lime, Yellow */
+            --mix: linear-gradient(45deg, #A020F0, #FFFFFF, #32CD32, #FFFF00);
+            --border-glow: conic-gradient(#A020F0, #FFFFFF, #32CD32, #FFFF00, #A020F0);
+            --primary: #A020F0;
+            --matrix: #32CD32;
+            --glass: rgba(255, 255, 255, 0.05);
+            --ios-blur: blur(40px);
+            --apple-ease: cubic-bezier(0.15, 0, 0.15, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Hind Siliguri', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background: #000; color: #fff; overflow: hidden; height: 100vh; width: 100vw; 
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+            background-size: cover; background-position: center; transition: background 1.5s var(--apple-ease);
+            padding: 3vh 0;
+        }
+
+        #particle-canvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+
+        /* --- Apple-Style Master Unlock Screen --- */
+        #unlock-overlay { 
+            position: fixed; inset: 0; z-index: 20000; background: radial-gradient(circle at center, #1a1a2e, #000); 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
+            transition: 1.2s var(--apple-ease);
+        }
+        .start-orb { width: 140px; height: 140px; background: var(--matrix); border-radius: 50%; filter: blur(50px); animation: pulseOrb 2s infinite; }
+        @keyframes pulseOrb { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.3); opacity: 0.8; } }
+
+        /* --- 1. Header: Text-Only Gradient Title (Exactly Centered) --- */
+        .header-fixed { text-align: center; z-index: 1000; width: 100%; margin-top: 10px; }
+        #editable-title { 
+            display: inline-block;
+            background: var(--mix);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: clamp(2.5rem, 8vw, 4.5rem); 
+            font-weight: 900; 
+            text-align: center; 
+            outline: none; 
+            letter-spacing: 8px; 
+            text-transform: uppercase;
+            animation: hueShift 4s infinite linear;
+            cursor: text;
+        }
+        @keyframes hueShift { to { filter: hue-rotate(360deg); } }
+        .mini-rtc { font-family: 'Share Tech Mono', monospace; font-size: 1.3rem; color: #ffeb3b; margin-top: 5px; letter-spacing: 2px; }
+
+        /* --- 2. Central Area (Exact Focal Point) --- */
+        #main-viewport { 
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            width: 100%; gap: 4vh; transform: scale(1); transition: 0.8s var(--apple-ease);
+        }
+
+        /* --- Thicker Smooth Glowing Borders --- */
+        .luxury-glow {
+            position: relative; padding: 5px; border-radius: 25px; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.8);
+        }
+        .luxury-glow::before {
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: var(--border-glow); animation: rotateGlow 4s linear infinite;
+        }
+        .inner-content { position: relative; z-index: 5; background: #000; border-radius: 20px; width: 100%; height: 100%; }
+        @keyframes rotateGlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .prayer-row { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+        .p-card { width: clamp(140px, 18vw, 220px); padding: 15px 0; text-align: center; }
+        .p-card small { font-size: 0.7rem; letter-spacing: 3px; color: #fff; opacity: 0.7; text-transform: uppercase; }
+        .p-card p { font-family: 'Share Tech Mono', monospace; font-size: 1.7rem; font-weight: bold; color: var(--matrix); }
+
+        .timer-grid { display: flex; gap: clamp(12px, 2.5vw, 25px); justify-content: center; align-items: center; }
+        .box { 
+            width: clamp(90px, 24vw, 170px); height: clamp(120px, 30vw, 210px); 
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: relative; overflow: hidden;
+        }
+        .box span { font-family: 'Share Tech Mono', monospace; font-size: clamp(3.2rem, 10vw, 5.5rem); color: var(--matrix); z-index: 10; text-shadow: 0 0 30px var(--matrix); }
+        .box small { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px; opacity: 0.5; z-index: 10; margin-top: 5px; }
+        .liquid-fill { position: absolute; bottom: 0; width: 100%; background: var(--matrix); opacity: 0.25; transition: height 1s; z-index: 1; }
+
+        /* --- 3. Navigation Dock (Apple Style) --- */
+        .dock-container { z-index: 8000; padding-bottom: 10px; }
+        .ios-dock { 
+            display: flex; gap: 12px; background: rgba(255, 255, 255, 0.12); 
+            padding: 12px 25px; border-radius: 60px; backdrop-filter: var(--ios-blur); 
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .dock-btn { 
+            width: 52px; height: 52px; border-radius: 50%; background: #fff; color: #000; 
+            border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            font-size: 1.2rem; transition: 0.4s var(--apple-ease);
+        }
+        .dock-btn:active { transform: scale(0.7) translateY(8px); background: var(--matrix); color: #fff; }
+
+        /* --- Centered Smart Showrav AI --- */
+        #ai-container { 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            width: 94%; max-width: 480px; height: 650px; background: rgba(12,12,15,0.99); 
+            border-radius: 50px; display: none; flex-direction: column; 
+            border: 2px solid var(--matrix); backdrop-filter: blur(60px); z-index: 18000; overflow: hidden;
+            box-shadow: 0 60px 180px #000;
+        }
+        .ai-header { padding: 25px; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 15px; }
+        
+        /* New Animated Orbital Logo */
+        .ai-orb-luxury { 
+            width: 55px; height: 55px; border-radius: 50%; padding: 4px;
+            background: var(--border-glow); animation: rotateGlow 3s linear infinite;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .ai-orb-inner { width: 100%; height: 100%; background: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.3rem; }
+
+        .ai-chat-view { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
+        .bubble { padding: 18px 25px; border-radius: 30px; max-width: 85%; font-size: 1.05rem; line-height: 1.6; }
+        .u-msg { background: #007aff; align-self: flex-end; }
+        .a-msg { background: #26262b; align-self: flex-start; border: 1px solid #333; }
+
+        /* --- Timer Picker Modal --- */
+        #timer-picker { 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            background: #1c1c1e; padding: 45px; border-radius: 50px; width: 380px; text-align: center; 
+            border: 1px solid #333; display: none; z-index: 20000; backdrop-filter: blur(30px);
+        }
+        .picker-row { display: flex; gap: 15px; justify-content: center; margin: 30px 0; }
+        .picker-row input { width: 85px; height: 85px; background: #222; border: 2px solid var(--matrix); border-radius: 20px; color: #fff; font-size: 2.2rem; text-align: center; font-family: 'Share Tech Mono'; outline: none; }
+
+        #yt-api-frame { position: absolute; top: -5000px; left: -5000px; visibility: hidden; }
+
+        .theme-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 15000; display: none; flex-direction: column; align-items: center; padding: 60px; overflow-y: auto; }
+        .theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; margin-top: 40px; }
+        .t-card { height: 130px; border-radius: 30px; cursor: pointer; background-size: cover; background-position: center; border: 3px solid transparent; transition: 0.4s; }
+    </style>
+</head>
+<body id="showrav-root">
+
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Professional Unlock Screen -->
+    <div id="unlock-overlay" onclick="launchApp()">
+        <div class="start-orb"></div>
+        <h1 style="margin-top: 40px; letter-spacing: 12px; font-weight: 900;">RAMADAN SUPREME</h1>
+        <p style="opacity: 0.7; font-size: 1.2rem; margin-top: 15px;">TAP TO START EXPERIENCE</p>
+    </div>
+
+    <!-- YouTube Music API -->
+    <div id="yt-api-frame"></div>
+
+    <!-- Header Section (Exactly Centered) -->
+    <header class="header-fixed">
+        <h1 id="editable-title" contenteditable="true">RAMADAN TIMER</h1>
+        <div class="mini-rtc" id="apple-rtc">00:00:00 PM</div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-viewport">
+        <!-- Rupsi Precision Prayer Countdowns -->
+        <div class="prayer-row">
+            <div class="luxury-glow"><div class="inner-content p-card"><small>SEHRI</small><p id="sehri-rem">--:--:--</p></div></div>
+            <div class="luxury-glow"><div class="inner-content p-card"><small>IFTAR</small><p id="iftar-rem">--:--:--</p></div></div>
+        </div>
+
+        <!-- Matrix Digital Timer -->
+        <div class="timer-grid">
+            <div class="luxury-glow"><div class="inner-content box"><div class="liquid-fill" id="l-h"></div><span id="v-h">00</span><small>Hours</small></div></div>
+            <div class="luxury-glow"><div class="inner-content box"><div class="liquid-fill" id="l-m"></div><span id="v-m">00</span><small>Min</small></div></div>
+            <div class="luxury-glow"><div class="inner-content box"><div class="liquid-fill" id="l-s"></div><span id="v-s">00</span><small>Sec</small></div></div>
+        </div>
+
+        <div style="margin-top: 50px; display: flex; gap: 20px;">
+            <button class="dock-btn" onclick="openTimerPicker()" style="width: auto; padding: 0 45px; border-radius: 18px; font-weight: 900; background: #fff; font-size: 1.1rem;">SET TIMER</button>
+            <button class="dock-btn" onclick="resetTimer()" style="width: auto; padding: 0 45px; border-radius: 18px; font-weight: 900; background: #ff3b30; color:#fff; font-size: 1.1rem;">RESET</button>
+        </div>
+    </main>
+
+    <!-- Navigation Dock -->
+    <footer class="dock-container">
+        <div class="ios-dock">
+            <button class="dock-btn" onclick="doZoom(1.15)" title="Zoom In"><i class="fas fa-plus"></i></button>
+            <button class="dock-btn" onclick="doZoom(0.85)" title="Zoom Out"><i class="fas fa-minus"></i></button>
+            <button class="dock-btn" onclick="toggleThemes()" title="Themes"><i class="fas fa-palette"></i></button>
+            <input type="file" id="img-up" hidden accept="image/*" onchange="handleImage(event)">
+            <button class="dock-btn" onclick="document.getElementById('img-up').click()" title="Upload Image"><i class="fas fa-image"></i></button>
+            <input type="file" id="aud-up" hidden accept="audio/*" onchange="handleAudio(event)">
+            <button class="dock-btn" onclick="document.getElementById('aud-up').click()" title="Upload Music"><i class="fas fa-music"></i></button>
+            <button class="dock-btn" onclick="toggleAI()" title="Showrav AI"><i class="fas fa-robot"></i></button>
+            <button class="dock-btn" onclick="toggleFull()" title="Fullscreen"><i class="fas fa-expand"></i></button>
+        </div>
+    </footer>
+
+    <!-- Centered AI Modal -->
+    <div id="ai-container">
+        <div class="ai-header">
+            <div class="ai-orb-luxury"><div class="ai-orb-inner"><i class="fas fa-atom"></i></div></div>
+            <div style="margin-left: 20px;">
+                <p style="font-weight: 900; color: var(--matrix); font-size: 1.2rem;">Showrav Assistant</p>
+                <p style="font-size: 0.7rem; color: #32d74b;">● ACTIVE & INTELLIGENT</p>
             </div>
+            <button onclick="toggleAI()" style="margin-left:auto; background:none; border:none; color:#888; font-size:2rem; cursor:pointer"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="ai-chat-view" id="ai-box"></div>
+        <div style="padding: 25px; display: flex; gap: 15px; background: #151515;">
+            <input type="text" id="ai-in" placeholder="Ask me anything..." onkeypress="if(event.key==='Enter') sendAI()" style="flex:1; background:#222; border:none; border-radius:30px; padding:15px 25px; color:#fff; outline:none; font-size: 1.1rem;">
+            <button class="dock-btn" onclick="sendAI()" style="background:var(--matrix); width:55px; height:55px; color:#000"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
-    <!-- Main App Layout (Hidden at first) -->
-    <main id="app-container" class="hidden">
-        
-        <!-- Step 2: Holding Title System -->
-        <header class="holding-bar">
-            <input type="text" id="editable-title" value="আমাদের পরিবারের রমজান টাইমার" spellcheck="false">
-            <div class="title-controls">
-                <input type="color" id="title-color" title="Color">
-                <select id="font-select">
-                    <option value="Poppins">Poppins</option>
-                    <option value="Kalpurush">Kalpurush</option>
-                    <option value="Arial">Arial</option>
-                </select>
-            </div>
-        </header>
-
-        <!-- Step 3: Real Time Clock -->
-        <div class="rt-clock" id="clock-display">00:00:00</div>
-
-        <!-- Step 4 & 5: Sehri & Iftar Boxes -->
-        <section class="prayer-times">
-            <div class="timer-box sehri-box">
-                <h3>সেহরির সময় বাকি</h3>
-                <div id="sehri-countdown" class="count">--:--:--</div>
-            </div>
-            <div class="timer-box iftar-box">
-                <h3>ইফতারের সময় বাকি</h3>
-                <div id="iftar-countdown" class="count">--:--:--</div>
-            </div>
-        </section>
-
-        <!-- Step 6 & 7: Main Timer & Liquid Animation -->
-        <section class="main-timer-section">
-            <div class="timer-card" id="timer-card">
-                <div class="liquid-bg" id="liquid-wave"></div>
-                <div class="timer-content">
-                    <h2 id="main-countdown">00:00:00</h2>
-                    <div class="timer-btns">
-                        <button onclick="zoomTimer(1.1)" class="zoom-btn"><i class="fas fa-plus"></i></button>
-                        <button id="set-timer-btn" class="action-btn">Set</button>
-                        <button id="reset-btn" class="action-btn">Reset</button>
-                        <button onclick="zoomTimer(0.9)" class="zoom-btn"><i class="fas fa-minus"></i></button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Step 11: AI Suggestion Box -->
-        <div id="ai-suggestion-box" class="ai-box">
-            <i class="fas fa-robot"></i>
-            <p id="ai-text">রমজানে সুস্থ থাকতে বেশি করে পানি পান করুন।</p>
+    <!-- Timer Picker Modal -->
+    <div id="timer-picker">
+        <h2 style="margin-bottom: 25px; font-weight: 900; letter-spacing: 2px;">SET TIME</h2>
+        <div class="picker-row">
+            <div><input type="number" id="in-h" value="00" min="0" max="23"><label>Hrs</label></div>
+            <div><input type="number" id="in-m" value="00" min="0" max="59"><label>Min</label></div>
+            <div><input type="number" id="in-s" value="00" min="0" max="59"><label>Sec</label></div>
         </div>
+        <button class="dock-btn" onclick="applyTimer()" style="width: 100%; background: #fff; font-weight: 900; height: 55px; font-size: 1.1rem;">START TIMER</button>
+        <button class="dock-btn" onclick="closeTimerPicker()" style="width: 100%; margin-top: 15px; background: transparent; color: #ff3b30; border: 1px solid #333;">CANCEL</button>
+    </div>
 
-        <!-- Step 8, 9, 10, 12: Sidebar Settings -->
-        <aside class="settings-panel">
-            <button id="toggle-settings"><i class="fas fa-cog"></i></button>
-            <div class="panel-content">
-                <h4>Themes</h4>
-                <div class="theme-grid" id="theme-switcher">
-                    <!-- Themes will be injected by JS -->
-                </div>
-                <h4>Sounds</h4>
-                <select id="sound-select"></select>
-                <input type="file" id="custom-audio" accept="audio/*">
-                <button onclick="toggleFullscreen()"><i class="fas fa-expand"></i> Full Screen</button>
-            </div>
-        </aside>
+    <!-- Theme Gallery -->
+    <div id="theme-modal-overlay" class="theme-overlay">
+        <button class="dock-btn" onclick="toggleThemes()" style="width:120px; border-radius:25px; margin-bottom:40px">BACK</button>
+        <div class="theme-grid" id="theme-list"></div>
+    </div>
 
-    </main>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        let ytPlayer, timerInt, remSecs = 0, totalSecs = 0, scale = 1, currentEffect = 'stars';
 
-    <audio id="alarm-sound" loop></audio>
-    <script src="script.js"></script>
+        function onYouTubeIframeAPIReady() {
+            ytPlayer = new YT.Player('yt-api-frame', {
+                height: '0', width: '0',
+                videoId: 't9L8b9eluFI',
+                playerVars: { 'autoplay': 1, 'loop': 1, 'playlist': 't9L8b9eluFI' },
+                events: { 'onReady': (e) => e.target.mute() }
+            });
+        }
+
+        function launchApp() {
+            document.getElementById('unlock-overlay').style.transform = "translateY(-100%)";
+            if(ytPlayer) { ytPlayer.unMute(); ytPlayer.playVideo(); }
+            document.documentElement.requestFullscreen().catch(() => {});
+            initApp();
+        }
+
+        function initApp() {
+            setInterval(() => { document.getElementById('apple-rtc').innerText = new Date().toLocaleTimeString('en-US', { hour12: true }); }, 1000);
+            fetchRupsi();
+            buildThemes();
+            animateParticles();
+        }
+
+        async function fetchRupsi() {
+            try {
+                const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Narayanganj&country=Bangladesh&method=2');
+                const data = await res.json();
+                const t = data.data.timings;
+                startCountdown(t.Fajr, 'sehri-rem', 2); // Precision offset
+                startCountdown(t.Maghrib, 'iftar-rem', 2);
+            } catch(e) { }
+        }
+
+        function startCountdown(time, id, offset) {
+            setInterval(() => {
+                const now = new Date();
+                const [h, m] = time.split(':');
+                const target = new Date(); target.setHours(parseInt(h), parseInt(m) + offset, 0);
+                if(target < now) target.setDate(target.getDate() + 1);
+                const diff = target - now;
+                const hh = Math.floor(diff/3600000), mm = Math.floor((diff%3600000)/60000), ss = Math.floor((diff%60000)/1000);
+                document.getElementById(id).innerText = `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+            }, 1000);
+        }
+
+        function openTimerPicker() { document.getElementById('timer-picker').style.display = 'block'; }
+        function closeTimerPicker() { document.getElementById('timer-picker').style.display = 'none'; }
+        function applyTimer() {
+            const h = parseInt(document.getElementById('in-h').value) || 0;
+            const m = parseInt(document.getElementById('in-m').value) || 0;
+            const s = parseInt(document.getElementById('in-s').value) || 0;
+            remSecs = (h * 3600) + (m * 60) + s;
+            totalSecs = remSecs;
+            if(remSecs > 0) {
+                clearInterval(timerInt);
+                timerInt = setInterval(() => {
+                    if(remSecs <= 0) { clearInterval(timerInt); alert("Time Up!"); return; }
+                    remSecs--; updateTimerUI();
+                }, 1000);
+                closeTimerPicker();
+            }
+        }
+        function updateTimerUI() {
+            document.getElementById('v-h').innerText = String(Math.floor(remSecs/3600)).padStart(2,'0');
+            document.getElementById('v-m').innerText = String(Math.floor((remSecs%3600)/60)).padStart(2,'0');
+            document.getElementById('v-s').innerText = String(remSecs%60).padStart(2,'0');
+            document.querySelectorAll('.liquid-fill').forEach(l => l.style.height = (remSecs/totalSecs)*100 + '%');
+        }
+        function resetTimer() { remSecs = 0; updateTimerUI(); clearInterval(timerInt); }
+
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let particles = [];
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1; this.vY = Math.random() * 1.5 + 0.5;
+                this.vX = Math.random() * 1 - 0.5;
+                this.color = '#fff';
+            }
+            update() { this.y += this.vY; this.x += this.vX; if(this.y > canvas.height) this.y = -10; }
+            draw() { ctx.beginPath(); ctx.fillStyle = this.color; ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
+        }
+        function animateParticles() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            if(particles.length < 80) particles.push(new Particle());
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+
+        const themes = [
+            {u:"https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?q=80&w=1400", e:"stars"},
+            {u:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1400", e:"wind"},
+            {u:"https://images.unsplash.com/photo-1490750967868-88aa4486c946?q=80&w=1400", e:"flower"},
+            {u:"https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?q=80&w=1400", e:"snow"}
+        ];
+        function buildThemes() {
+            const list = document.getElementById('theme-list');
+            for(let i=0; i<30; i++) {
+                const t = themes[i % themes.length];
+                const d = document.createElement('div');
+                d.className = 't-card'; d.style.backgroundImage = `url('${t.u}')`;
+                d.onclick = () => { document.body.style.backgroundImage = `url('${t.u}')`; currentEffect = t.e; particles = []; toggleThemes(); };
+                list.appendChild(d);
+            }
+        }
+
+        function doZoom(v) { scale = v > 1 ? scale + 0.1 : scale - 0.1; document.getElementById('main-viewport').style.transform = `scale(${scale})`; }
+        function toggleThemes() { let m = document.getElementById('theme-modal-overlay'); m.style.display = (m.style.display==='flex'?'none':'flex'); }
+        function toggleAI() { let p = document.getElementById('ai-container'); p.style.display = (p.style.display==='flex'?'none':'flex'); }
+        function toggleFull() { if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+        function handleImage(e) { const r = new FileReader(); r.onload = (f) => { document.body.style.backgroundImage = `url('${f.target.result}')`; document.body.style.backgroundSize = "cover"; }; r.readAsDataURL(e.target.files[0]); }
+        function handleAudio(e) { const url = URL.createObjectURL(e.target.files[0]); const a = new Audio(url); a.loop = true; a.play(); document.getElementById('yt-api-frame').innerHTML=""; }
+
+        function sendAI() {
+            const inp = document.getElementById('ai-in');
+            const msg = inp.value.trim(); if(!msg) return;
+            addBubble(msg, 'u-msg'); inp.value = '';
+            setTimeout(() => {
+                let r = "আপনার জিজ্ঞাসাটি চমৎকার। আমি সৌরভের তৈরি রমজান এআই।";
+                if(msg.toLowerCase().includes("সালাম")) r = "ওয়ালাইকুম আসসালাম! আপনার দিনটি শুভ হোক।";
+                if(msg.toLowerCase().includes("কে বানিয়েছে")) r = "এই পুরো সিস্টেমটি সৌরভ (Showrav) তার কোডিং প্রতিভা দিয়ে তৈরি করেছেন।";
+                addBubble(r, 'a-msg');
+            }, 600);
+        }
+        function addBubble(t, c) {
+            const box = document.getElementById('ai-box');
+            const d = document.createElement('div'); d.className = `bubble ${c}`; d.innerText = t;
+            box.appendChild(d); box.scrollTop = box.scrollHeight;
+        }
+    </script>
 </body>
 </html>
