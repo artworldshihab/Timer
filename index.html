@@ -3,254 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Diamond Intel Ultra</title>
+    <title>Diamond Intel Elite - Theme Integrated</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --accent: #00f2ff;
-            --glass: rgba(0, 0, 0, 0.6);
+            --primary-cyan: #00f2ff;
+            --sehri-gold: #ffcc00; /* গোল্ডেন কালার */
+            --iftar-red: #ff3b30;  /* উজ্জ্বল রেড কালার */
+            --glass: rgba(0, 0, 0, 0.85);
+            --card-zoom: 1;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { background: #000; color: #fff; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; }
 
-        body {
-            background: #000; color: #fff; height: 100vh; width: 100vw;
-            overflow: hidden; display: flex; flex-direction: column;
+        /* Background Layer */
+        #bg-img { position: fixed; inset: 0; z-index: -3; background-size: cover; background-position: center; transition: 0.8s ease; background-image: url('1000013015.jpg'); }
+        #sky { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
+
+        .wrapper { z-index: 10; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 20px; }
+        
+        header { text-align: center; margin-top: 10px; }
+        .logo { 
+            font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 900; 
+            background: linear-gradient(90deg, #fff, var(--primary-cyan), #fff); 
+            background-size: 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            animation: shine 5s linear infinite; letter-spacing: -1px;
         }
-
-        /* Background & Animation Layers */
-        #bg-image {
-            position: fixed; inset: 0; z-index: -3;
-            background-size: cover; background-position: center;
-            transition: 1s ease-in-out;
-        }
-
-        #sky-animation {
-            position: fixed; inset: 0; z-index: -2;
-            pointer-events: none;
-        }
-
-        .main-container {
-            position: relative; z-index: 10;
-            display: flex; flex-direction: column; height: 100%;
-            padding: 20px; justify-content: space-between; align-items: center;
-        }
-
-        /* Top Header */
-        header { text-align: center; }
-        .diamond-logo {
-            font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 900;
-            background: linear-gradient(90deg, #fff, var(--accent), #fff);
-            background-size: 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: shine 4s linear infinite; letter-spacing: -2px;
-        }
-        .live-clock { font-size: 1.8rem; letter-spacing: 5px; opacity: 0.8; margin-top: 5px; }
-
         @keyframes shine { to { background-position: 200% center; } }
+        .clock { font-size: 1.5rem; letter-spacing: 5px; opacity: 0.8; font-weight: 300; }
 
-        /* Dashboard Grid */
-        .grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 20px; width: 100%; max-width: 1200px; margin: auto;
+        /* Zoomable Grid */
+        .grid-container { 
+            transform: scale(var(--card-zoom)); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; max-width: 1150px; margin: auto; 
         }
 
-        .card {
-            background: var(--glass); backdrop-filter: blur(40px);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 40px;
-            padding: 40px 20px; text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        /* Snake Glow Effect */
+        .card { 
+            background: var(--glass); backdrop-filter: blur(25px); border-radius: 35px; padding: 35px 20px; 
+            text-align: center; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
         }
-
-        .label { font-size: 0.8rem; letter-spacing: 3px; opacity: 0.5; margin-bottom: 10px; display: block; }
-        .val { font-size: 3rem; font-weight: 900; color: var(--accent); }
-
-        /* Mission Timer */
-        .mission-display { font-size: 4rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px var(--accent); }
-        .picker-box { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
-        select {
-            background: rgba(255,255,255,0.1); border: none; color: #fff;
-            padding: 10px; border-radius: 15px; font-size: 1.2rem; outline: none;
+        .card::before {
+            content: ''; position: absolute; height: 200%; width: 200%; 
+            background-image: conic-gradient(transparent, transparent, transparent, var(--accent));
+            animation: rotate 3s linear infinite; top: -50%; left: -50%;
         }
-
-        .btn-start {
-            width: 100%; padding: 18px; border-radius: 20px; 
-            background: var(--accent); color: #000; border: none;
-            font-weight: 900; cursor: pointer; font-size: 1rem;
+        .card::after {
+            content: ''; position: absolute; inset: 4px; background: rgba(8, 8, 8, 0.95); border-radius: 32px; z-index: 1;
         }
+        .inner-content { position: relative; z-index: 2; }
+        @keyframes rotate { 100% { transform: rotate(360deg); } }
 
-        /* Navigation Bar */
-        .nav-pill {
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(50px);
-            border-radius: 100px; padding: 12px 40px; display: flex; gap: 40px;
-            border: 1px solid rgba(255,255,255,0.15); margin-bottom: 20px;
-        }
+        /* Typography */
+        .label { font-size: 0.75rem; letter-spacing: 3px; opacity: 0.6; margin-bottom: 12px; display: block; }
+        .val { font-size: 2.8rem; font-weight: 900; color: var(--accent); }
+        .m-val { font-size: 3.2rem; font-weight: 900; color: #fff; }
 
-        .nav-icon { background: none; border: none; cursor: pointer; transition: 0.3s; }
-        .nav-icon:hover { transform: scale(1.3); filter: drop-shadow(0 0 8px var(--accent)); }
-        .nav-icon svg { width: 35px; height: 35px; fill: #fff; }
+        /* Select & Button */
+        .picker-box { display: flex; justify-content: center; gap: 6px; margin: 15px 0; }
+        select { background: #111; color: #fff; border: 1px solid #333; padding: 8px; border-radius: 10px; cursor: pointer; }
+        .btn-start { width: 100%; padding: 15px; border-radius: 18px; background: var(--accent); color: #000; border: none; font-weight: 900; cursor: pointer; }
 
-        /* Responsive */
-        @media (max-width: 900px) {
-            .grid { grid-template-columns: 1fr; gap: 10px; overflow-y: auto; max-height: 60vh; }
-            .card { padding: 25px 15px; }
-        }
+        /* Nav Bar */
+        .nav-bar { background: rgba(255,255,255,0.05); backdrop-filter: blur(50px); border-radius: 100px; padding: 12px 40px; display: flex; gap: 30px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; }
+        .nav-btn { background: none; border: none; cursor: pointer; color: #fff; transition: 0.3s; }
+        .nav-btn svg { width: 28px; height: 28px; fill: currentColor; }
+        .nav-btn:hover { color: var(--primary-cyan); transform: scale(1.2); }
 
-        #theme-menu {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000;
-            display: none; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); padding: 40px; gap: 20px;
-        }
-        .thumb { aspect-ratio: 9/16; border-radius: 20px; cursor: pointer; background-size: cover; border: 2px solid transparent; }
+        /* Fixed Panels */
+        .panel { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; flex-direction: column; padding: 25px; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 15px; }
+        .back-btn { background: #222; border: none; color: #fff; padding: 10px 20px; border-radius: 10px; cursor: pointer; }
+        
+        /* Theme Grid */
+        .theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 15px; overflow-y: auto; flex: 1; }
+        .t-card { aspect-ratio: 9/16; border-radius: 15px; cursor: pointer; background-size: cover; background-position: center; border: 2px solid #333; transition: 0.3s; }
+        .t-card:hover { border-color: var(--primary-cyan); }
+
+        /* AI Chat area */
+        #chat-area { flex: 1; overflow-y: auto; padding: 15px; background: #0a0a0a; border-radius: 20px; margin-bottom: 15px; }
+        .msg { margin-bottom: 10px; padding: 12px; border-radius: 15px; max-width: 85%; line-height: 1.4; font-size: 0.9rem; }
+        .bot { background: #1a1a1a; color: #fff; }
+        .user { background: var(--primary-cyan); color: #000; margin-left: auto; }
+
+        @media (max-width: 850px) { .grid-container { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <div id="bg-image"></div>
-    <canvas id="sky-animation"></canvas>
+    <div id="bg-img"></div>
+    <canvas id="sky"></canvas>
 
-    <div class="main-container">
+    <div class="wrapper">
         <header>
-            <h1 class="diamond-logo">DIAMOND INTEL</h1>
-            <div class="live-clock" id="wall-clock">00:00:00 AM</div>
+            <h1 class="logo">DIAMOND INTEL</h1>
+            <div class="clock" id="wall-clock">00:00:00</div>
         </header>
 
-        <div class="grid">
-            <div class="card">
-                <span class="label">SEHRI TIME</span>
-                <div class="val" id="sehri">00:00:00</div>
-            </div>
-
-            <div class="card" style="border: 2px solid var(--accent)">
-                <span class="label" style="color:var(--accent)">INTEL MISSION</span>
-                <div class="mission-display" id="m-display">00:00:00</div>
-                <div class="picker-box" id="p-box">
-                    <select id="th"></select><select id="tm"></select><select id="ts"></select>
+        <main class="grid-container">
+            <div class="card" style="--accent: var(--sehri-gold);">
+                <div class="inner-content">
+                    <span class="label">SEHRI COUNTDOWN</span>
+                    <div class="val" id="sehri-timer">00:00:00</div>
                 </div>
-                <button class="btn-start" id="m-btn" onclick="runMission()">START MISSION</button>
             </div>
 
-            <div class="card">
-                <span class="label">IFTAR TIME</span>
-                <div class="val" id="iftar">00:00:00</div>
+            <div class="card" style="--accent: var(--primary-cyan);">
+                <div class="inner-content">
+                    <span class="label" style="color: var(--primary-cyan);">MISSION CONTROL</span>
+                    <div class="m-val" id="mission-disp">00:00:00</div>
+                    <div class="picker-box" id="p-grp">
+                        <select id="th"></select><select id="tm"></select><select id="ts"></select>
+                    </div>
+                    <button class="btn-start" id="m-btn" onclick="toggleMission()">INITIATE</button>
+                </div>
             </div>
-        </div>
 
-        <nav class="nav-pill">
-            <button class="nav-icon" onclick="openMenu()"><svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8z"/></svg></button>
-            <button class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/></svg></button>
-            <button class="nav-icon" onclick="document.getElementById('m-in').click()"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></button>
-            <button class="nav-icon" onclick="document.getElementById('i-in').click()"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14l-3.5-4.5-2.5 3.01L17 17H5V5h14v12z"/></svg></button>
+            <div class="card" style="--accent: var(--iftar-red);">
+                <div class="inner-content">
+                    <span class="label">IFTAR COUNTDOWN</span>
+                    <div class="val" id="iftar-timer">00:00:00</div>
+                </div>
+            </div>
+        </main>
+
+        <nav class="nav-bar">
+            <button class="nav-btn" onclick="openP('theme-panel')"><svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8z"/></svg></button>
+            <button class="nav-btn" onclick="openP('ai-panel')"><svg viewBox="0 0 24 24"><path d="M21 16.5L12 22l-9-5.5V7.5L12 2l9 5.5v9z"/></svg></button>
+            <button class="nav-btn" onclick="z(0.1)"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
+            <button class="nav-btn" onclick="z(-0.1)"><svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg></button>
+            <button class="nav-btn" onclick="document.getElementById('music-in').click()"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></button>
+            <button class="nav-btn" onclick="toggleFS()"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3z"/></svg></button>
         </nav>
     </div>
 
-    <div id="theme-menu"></div>
-    <input type="file" id="m-in" hidden accept="audio/*" onchange="playMusic(event)">
-    <input type="file" id="i-in" hidden accept="image/*" onchange="setCustomBg(event)">
-    <audio id="audio-player" loop></audio>
+    <div id="theme-panel" class="panel">
+        <div class="panel-header">
+            <button class="back-btn" onclick="closeP()">← BACK</button>
+            <h2 style="color:var(--primary-cyan)">THEME GALLERY</h2>
+            <button class="back-btn" onclick="document.getElementById('img-in').click()">+ UPLOAD</button>
+        </div>
+        <div class="theme-grid" id="theme-grid"></div>
+    </div>
+
+    <div id="ai-panel" class="panel">
+        <div class="panel-header">
+            <button class="back-btn" onclick="closeP()">← BACK</button>
+            <h2 style="color:var(--primary-cyan)">DIAMOND AI</h2>
+            <div></div>
+        </div>
+        <div id="chat-area">
+            <div class="msg bot">System Online. How can I assist you?</div>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <input type="text" id="ai-input" placeholder="Type command..." style="flex:1; background:#111; border:none; padding:15px; color:#fff; border-radius:15px;">
+            <button onclick="ask()" style="padding:0 25px; background:var(--primary-cyan); border:none; border-radius:15px; color:#000; font-weight:900;">SEND</button>
+        </div>
+    </div>
+
+    <input type="file" id="img-in" hidden onchange="up(event, 'img')">
+    <input type="file" id="music-in" hidden onchange="up(event, 'audio')">
+    <audio id="player" loop></audio>
 
     <script>
-        const themes = [
-            {u: '1000013015.jpg', c: '#00f2ff'}, {u: '1000013014.jpg', c: '#ff8800'},
-            {u: '1000013013.jpg', c: '#00ffaa'}, {u: '1000013012.jpg', c: '#ff66aa'},
-            {u: '1000013011.jpg', c: '#ffffff'}, {u: '1000013010.jpg', c: '#00ffff'}
+        // আপনার পাঠানো ইমেজের লিস্ট এখানে এড করা হয়েছে
+        const imageFiles = [
+            '1000013015.jpg', '1000013014.jpg', '1000013013.jpg', '1000013012.jpg',
+            '1000013011.jpg', '1000013010.jpg', '1000013008.jpg', '1000013007.jpg',
+            '1000013006.jpg', '1000013005.jpg', '1000013004.jpg', '1000012660.jpg'
         ];
 
-        let mInterval = null;
-        let mSecs = 0;
-        let particles = [];
-        const canvas = document.getElementById('sky-animation');
+        let mSecs = 0, mInt = null, zoomLv = 1, particles = [];
+        const canvas = document.getElementById('sky');
         const ctx = canvas.getContext('2d');
 
         function init() {
             // Fill Pickers
-            const h=document.getElementById('th'), m=document.getElementById('tm'), s=document.getElementById('ts');
-            for(let i=0; i<24; i++) h.innerHTML += `<option value="${i}">${i.toString().padStart(2,'0')}</option>`;
-            for(let i=0; i<60; i++){
-                m.innerHTML += `<option value="${i}">${i.toString().padStart(2,'0')}</option>`;
-                s.innerHTML += `<option value="${i}">${i.toString().padStart(2,'0')}</option>`;
-            }
-            
-            setTheme(themes[0]);
-            window.addEventListener('resize', resize);
-            resize(); 
-            animateSky(); // Start Animation
-            setInterval(clocks, 1000);
-        }
-
-        // --- SKY ANIMATION ENGINE ---
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        
-        function animateSky() {
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent');
-            
-            if(particles.length < 80) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: -10,
-                    v: Math.random() * 2 + 1,
-                    o: Math.random(),
-                    sz: Math.random() * 2 + 1
-                });
+            const hh = document.getElementById('th'), mm = document.getElementById('tm'), ss = document.getElementById('ts');
+            for(let i=0; i<24; i++) hh.innerHTML += `<option value="${i}">${i}h</option>`;
+            for(let i=0; i<60; i++) {
+                mm.innerHTML += `<option value="${i}">${i}m</option>`;
+                ss.innerHTML += `<option value="${i}">${i}s</option>`;
             }
 
-            particles.forEach((p, i) => {
-                ctx.globalAlpha = p.o;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.sz, 0, Math.PI*2);
-                ctx.fill();
-                p.y += p.v;
-                if(p.y > canvas.height) particles.splice(i, 1);
+            // Fill Theme Grid with your images
+            const tGrid = document.getElementById('theme-grid');
+            imageFiles.forEach(img => {
+                const item = document.createElement('div');
+                item.className = 't-card';
+                item.style.backgroundImage = `url('${img}')`;
+                item.onclick = () => setT(img);
+                tGrid.appendChild(item);
             });
-            requestAnimationFrame(animateSky);
+
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            animate();
+            setInterval(updateTime, 1000);
         }
 
-        // --- MISSION TIMER LOGIC ---
-        function runMission() {
-            const btn = document.getElementById('m-btn');
-            const pBox = document.getElementById('p-box');
-            const disp = document.getElementById('m-display');
-
-            if (mInterval) {
-                clearInterval(mInterval);
-                mInterval = null;
-                btn.innerText = "START MISSION";
-                btn.style.background = "var(--accent)";
-                pBox.style.display = "flex";
-                return;
-            }
-
-            let h = parseInt(document.getElementById('th').value) || 0;
-            let m = parseInt(document.getElementById('tm').value) || 0;
-            let s = parseInt(document.getElementById('ts').value) || 0;
-            mSecs = (h * 3600) + (m * 60) + s;
-
-            if (mSecs <= 0) return;
-
-            btn.innerText = "ABORT";
-            btn.style.background = "#ff3b30";
-            pBox.style.display = "none";
-
-            mInterval = setInterval(() => {
-                mSecs--;
-                let hh = Math.floor(mSecs/3600).toString().padStart(2,'0');
-                let mm = Math.floor((mSecs%3600)/60).toString().padStart(2,'0');
-                let ss = (mSecs%60).toString().padStart(2,'0');
-                disp.innerText = `${hh}:${mm}:${ss}`;
-
-                if (mSecs <= 0) {
-                    clearInterval(mInterval);
-                    mInterval = null;
-                    alert("Mission Success!");
-                    btn.innerText = "START MISSION";
-                    btn.style.background = "var(--accent)";
-                    pBox.style.display = "flex";
-                }
-            }, 1000);
+        function animate() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = "#fff";
+            if(particles.length < 50) particles.push({x:Math.random()*canvas.width, y:-10, v:Math.random()*1.5+0.5, o:Math.random()});
+            particles.forEach((p, i) => {
+                ctx.globalAlpha = p.o; ctx.beginPath(); ctx.arc(p.x, p.y, 1, 0, Math.PI*2); ctx.fill();
+                p.y += p.v; if(p.y > canvas.height) particles.splice(i,1);
+            });
+            requestAnimationFrame(animate);
         }
 
-        function clocks() {
+        function updateTime() {
             const now = new Date();
-            document.getElementById('wall-clock').innerText = now.toLocaleTimeString('en-US', {hour12:true});
+            document.getElementById('wall-clock').innerText = now.toLocaleTimeString();
             const calc = (h, m, id) => {
                 let target = new Date(); target.setHours(h, m, 0);
                 if(now > target) target.setDate(target.getDate()+1);
@@ -260,25 +225,44 @@
                 let ss = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
                 document.getElementById(id).innerText = `${hh}:${mm}:${ss}`;
             }
-            calc(4, 45, 'sehri');
-            calc(18, 10, 'iftar');
+            calc(4, 45, 'sehri-timer'); calc(18, 10, 'iftar-timer');
         }
 
-        function openMenu() {
-            const m = document.getElementById('theme-menu');
-            m.style.display = 'grid';
-            m.innerHTML = themes.map(t => `<div class="thumb" style="background-image:url(${t.u})" onclick="setTheme({u:'${t.u}', c:'${t.c}'})"></div>`).join('');
+        function toggleMission() {
+            const btn = document.getElementById('m-btn'), grp = document.getElementById('p-grp'), disp = document.getElementById('mission-disp');
+            if(mInt) { clearInterval(mInt); mInt=null; btn.innerText="INITIATE"; grp.style.display="flex"; return; }
+            mSecs = (parseInt(document.getElementById('th').value)*3600) + (parseInt(document.getElementById('tm').value)*60) + parseInt(document.getElementById('ts').value);
+            if(mSecs <= 0) return;
+            btn.innerText="ABORT"; grp.style.display="none";
+            mInt = setInterval(() => {
+                mSecs--;
+                let h = Math.floor(mSecs/3600).toString().padStart(2,'0');
+                let m = Math.floor((mSecs%3600)/60).toString().padStart(2,'0');
+                let s = (mSecs%60).toString().padStart(2,'0');
+                disp.innerText = `${h}:${m}:${s}`;
+                if(mSecs <= 0) { clearInterval(mInt); alert("Mission Success!"); toggleMission(); }
+            }, 1000);
         }
 
-        function setTheme(t) {
-            document.getElementById('bg-image').style.backgroundImage = `url(${t.u})`;
-            document.documentElement.style.setProperty('--accent', t.c);
-            document.getElementById('theme-menu').style.display = 'none';
-            particles = []; // Refresh particles color
+        function setT(src) { document.getElementById('bg-img').style.backgroundImage = `url('${src}')`; closeP(); }
+        function openP(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeP() { document.querySelectorAll('.panel').forEach(p => p.style.display='none'); }
+        function z(v) { zoomLv += v; document.documentElement.style.setProperty('--card-zoom', zoomLv); }
+        function toggleFS() { if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+
+        function ask() {
+            const i = document.getElementById('ai-input'), a = document.getElementById('chat-area');
+            if(!i.value) return;
+            a.innerHTML += `<div class="msg user">${i.value}</div>`;
+            setTimeout(() => { a.innerHTML += `<div class="msg bot">Command received. Analyzing mission parameters...</div>`; a.scrollTop = a.scrollHeight; }, 800);
+            i.value = "";
         }
 
-        function playMusic(e) { const p=document.getElementById('audio-player'); p.src=URL.createObjectURL(e.target.files[0]); p.play(); }
-        function setCustomBg(e) { setTheme({u: URL.createObjectURL(e.target.files[0]), c:'#00f2ff'}); }
+        function up(e, type) {
+            const url = URL.createObjectURL(e.target.files[0]);
+            if(type==='img') setT(url);
+            else { const p = document.getElementById('player'); p.src = url; p.play(); }
+        }
 
         window.onload = init;
     </script>
